@@ -20,4 +20,33 @@ def day1_task2():
                         print(nums[i]*nums[j]*nums[k])
     f.close()
 
-day1_task2()
+
+#Day 2, and we do it like we did it in Perl...
+import re
+def day2_task1():
+    with open("input/day2.txt") as f:
+        line = f.readline()
+        c = 0
+        while line:
+            if int(re.findall(r"(\d+)-", line)[0]) <= \
+               len(re.findall(re.findall(r"(\w):", line)[0], re.findall(r":(.+)", line)[0] )) <= \
+               int(re.findall(r"-(\d+)", line)[0]):
+                c += 1
+            line = f.readline()
+        print(c)
+    f.close()
+
+def day2_task2():
+    with open("input/day2.txt") as f:
+        line = f.readline()
+        c = 0
+        while line:
+            chars = []
+            chars.extend(re.findall(r":(.+)", line)[0])
+            if (chars[int(re.findall(r"(\d+)-", line)[0])] == re.findall(r"(\w):", line)[0] or
+                chars[int(re.findall(r"-(\d+)", line)[0])] == re.findall(r"(\w):", line)[0]) and \
+                chars[int(re.findall(r"(\d+)-", line)[0])] != chars[int(re.findall(r"-(\d+)", line)[0])]:
+                c += 1
+            line = f.readline()
+        print(c)
+    f.close()
