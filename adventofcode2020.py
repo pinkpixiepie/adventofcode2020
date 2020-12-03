@@ -51,7 +51,7 @@ def day2_task2():
         print(c)
     f.close()
 
-def day3_task1(cx = 3, cy = 1):
+def day3(cx = 3, cy = 1):
     with open("input/day3.txt") as f:
         v = [x for x in f.read().split("\n")[::cy]]
     trees = 0
@@ -62,10 +62,13 @@ def day3_task1(cx = 3, cy = 1):
     return trees
     f.close()
 
+def day3_task1():
+    print(day3())
+
 from six.moves import reduce
 def day3_task2():
     moves = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
     trees = []
     for x,y in moves:
-        trees.append(day3_task1(x, y))
+        trees.append(day3(x, y))
     print(reduce(lambda x, y: x*y, trees))
