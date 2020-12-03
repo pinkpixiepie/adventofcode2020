@@ -50,3 +50,22 @@ def day2_task2():
             line = f.readline()
         print(c)
     f.close()
+
+def day3_task1(cx = 3, cy = 1):
+    with open("input/day3.txt") as f:
+        v = [x for x in f.read().split("\n")[::cy]]
+    trees = 0
+    x = 0
+    for y in v:
+        trees += (y[x % len(v[0])] == "#")
+        x += cx
+    return trees
+    f.close()
+
+from six.moves import reduce
+def day3_task2():
+    moves = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+    trees = []
+    for x,y in moves:
+        trees.append(day3_task1(x, y))
+    print(reduce(lambda x, y: x*y, trees))
