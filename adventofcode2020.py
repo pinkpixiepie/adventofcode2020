@@ -1,3 +1,6 @@
+import re
+from six.moves import reduce
+
 def day1_task1():
     with open("input/day1.txt") as f:
         n = 2020
@@ -22,7 +25,6 @@ def day1_task2():
 
 
 #Day 2, and we do it like we did it in Perl...
-import re
 def day2_task1():
     with open("input/day2.txt") as f:
         line = f.readline()
@@ -65,10 +67,92 @@ def day3(cx = 3, cy = 1):
 def day3_task1():
     print(day3())
 
-from six.moves import reduce
 def day3_task2():
     moves = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
     trees = []
     for x,y in moves:
         trees.append(day3(x, y))
     print(reduce(lambda x, y: x*y, trees))
+
+
+def day4_validation(passport, extended_validation):
+    reqfields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
+    allfields = reqfields + ['cid']
+
+    invalidfields = 0
+
+    passport_fields = passport.split(' ')
+
+    for field in reqfields:
+        if field not in passport:
+            invalidfields += 1
+            break
+        else:
+            for p in passport_fields:
+                k, v = p.split(':')
+                if not day4_extended_validation(k, v) and extended_validation:
+                    invalidfields += 1
+                    break
+
+    return (invalidfields == 0)
+
+def day4_extended_validation(key, value):
+    eye_colors = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
+
+    if "byr" in key:
+        if int(value) >= 1920 and int(value) <= 2002:
+            return True
+
+    if "iyr" in key:
+        if int(value) >= 2010 and int(value) <= 2020:
+            return True
+
+    if "eyr" in key:
+        if int(value) >= 2020 and int(value) <= 2030:
+            return True
+
+    if "hgt" in key:
+        if "in" in value:
+            if 59 <= int(re.sub("[a-z]", "", value)) <= 76:
+                return True
+        else:
+            if 150 <= int(re.sub("[a-z]", "", value)) <= 193:
+                return True
+
+    if "hcl" in key:
+        e = re.compile('#[0-9a-f]{6}')
+        m = e.match(value)
+        return(bool(m))
+
+    if "ecl" in key:
+        return value in eye_colors
+
+    if "pid" in key:
+        return len(value) == 9
+
+    if "cid" in key:
+        return True
+
+    return False
+
+def day4(extended_validation = False):
+    validcount = 0
+    processable = []
+    with open("input/day4.txt") as f:
+        all_passports = f.readlines()
+        all_passports = [line.strip() for line in all_passports]
+        all_passports.append('')
+
+        passport = ''
+        for e in all_passports:
+            if e != '':
+                passport += ' ' + e
+            else:
+                processable.append(passport.strip())
+                passport = ''
+
+        for passport in processable:
+            if day4_validation(passport, extended_validation):
+                validcount += 1
+
+    print(validcount)
